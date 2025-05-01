@@ -43,7 +43,7 @@ public class LoginServlet extends HttpServlet {
 
 
             if (usuario != null) {
-                System.out.println("Autenticación exitosa para: " + username); // Debug
+                System.out.println("[LoginServlet] Autenticación exitosa para: " + username); // Debug
 
 
                 // Obtener la sesión
@@ -58,14 +58,16 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("usuarioRol", usuario.getRol());
 
 
-                System.out.println("Usuario " + username + " guardado en sesión con ID: " + session.getId()); // Debug
+                System.out.println("[LoginServlet] Usuario " + username + " guardado en sesión con ID: " + session.getId()); // Debug
 
 
                 // Redirigir según el rol
                 String redirectPath = request.getContextPath();
                 if ("usuario".equals(usuario.getRol())) {
+                    System.out.println("[LoginServlet] usuario fue redirigido a /chat");
                     redirectPath += "/chat";
                 } else if ("admin".equals(usuario.getRol()) || "superadmin".equals(usuario.getRol())) {
+                    System.out.println("[LoginServlet] usuario fue redirigido a /admin");
                     redirectPath += "/admin";
                 } else {
                     // Rol desconocido (esto no debería ocurrir, pero es bueno tener un caso por defecto)
@@ -76,11 +78,11 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect(redirectPath);
                 return;
             } else {
-                System.out.println("Credenciales inválidas para: " + username); // Debug
+                System.out.println("[LoginServlet] Credenciales inválidas para: " + username); // Debug
                 request.setAttribute("error", "Usuario o contraseña incorrectos");
             }
         } catch (SQLException e) {
-            System.err.println("Error en BD durante login:");
+            System.err.println("[LoginServlet] Error en BD durante login:");
             e.printStackTrace();
             request.setAttribute("error", "Error del sistema");
         }

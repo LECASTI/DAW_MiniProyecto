@@ -1,3 +1,4 @@
+// src/main/java/com/example/app/servlets/ChatServlet.java
 package com.example.app.servlets;
 
 import com.example.app.dao.ChatDAO;
@@ -99,7 +100,7 @@ public class ChatServlet extends HttpServlet {
                     cssClass = "user-message";
                 }
 
-                System.out.println("[DEBUG] Mensaje: " + mensaje.getContenido() + " | usuarioId: " + mensaje.getUsuarioId());
+                //  System.out.println("[DEBUG] Mensaje: " + mensaje.getContenido() + " | usuarioId: " + mensaje.getUsuarioId());
                 mensajesParaJSP.add(new MensajeParaJSP(mensaje.getContenido(), cssClass));
             }
         }

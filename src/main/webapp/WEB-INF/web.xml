@@ -37,21 +37,12 @@
     <url-pattern>/chat</url-pattern>
   </servlet-mapping>
 
-  <security-constraint>
-    <web-resource-collection>
-      <url-pattern>/admin/*</url-pattern>
-    </web-resource-collection>
-    <auth-constraint>
-      <role-name>admin</role-name>
-      <role-name>superadmin</role-name>
-    </auth-constraint>
-  </security-constraint>
-
-  <login-config>
-    <auth-method>FORM</auth-method>
-    <form-login-config>
-      <form-login-page>/login</form-login-page>
-      <form-error-page>/login?error</form-error-page>
-    </form-login-config>
-  </login-config>
+  <servlet>
+    <servlet-name>AdminServlet</servlet-name>
+    <servlet-class>com.example.app.servlets.AdminServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AdminServlet</servlet-name>
+    <url-pattern>/admin</url-pattern>
+  </servlet-mapping>
 </web-app>
