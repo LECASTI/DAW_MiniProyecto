@@ -4,4 +4,36 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
+  <!-- Configuración de Listeners -->
+  <listener>
+    <listener-class>com.example.app.utils.InicializadorBD</listener-class>
+  </listener>
+
+  <!-- Mapeo de Servlets -->
+  <servlet>
+    <servlet-name>LoginServlet</servlet-name>
+    <servlet-class>com.example.app.servlets.LoginServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>LoginServlet</servlet-name>
+    <url-pattern>/login</url-pattern>
+  </servlet-mapping>
+
+  <security-constraint>
+    <web-resource-collection>
+      <url-pattern>/admin/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>admin</role-name>
+      <role-name>superadmin</role-name>
+    </auth-constraint>
+  </security-constraint>
+
+  <login-config>
+    <auth-method>FORM</auth-method>
+    <form-login-config>
+      <form-login-page>/login</form-login-page>
+      <form-error-page>/login?error</form-error-page>
+    </form-login-config>
+  </login-config>
 </web-app>
