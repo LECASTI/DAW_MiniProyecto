@@ -62,7 +62,7 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>2.14.2</version>
+      <version>2.12.7.1</version>
     </dependency>
 
     <dependency>
@@ -100,8 +100,11 @@
         <artifactId>tomcat7-maven-plugin</artifactId>
         <version>2.2</version>
         <configuration>
-          <path>/MiniProyecto</path> <!-- Ruta que usarás en el navegador -->
+          <path>/</path> <!-- La ruta que se usara para el proyecto, era /MiniProyecto pero la deje como /-->
           <port>8080</port>
+          <systemProperties>
+            <JAVA_OPTS>-Xms512m -Xmx1024m</JAVA_OPTS>
+          </systemProperties>
         </configuration>
       </plugin>
 

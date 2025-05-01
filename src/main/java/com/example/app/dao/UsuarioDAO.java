@@ -8,14 +8,27 @@ import java.sql.*;
 public class UsuarioDAO {
     public Usuario autenticar(String username, String password) throws SQLException {
         String sql = "SELECT * FROM usuarios WHERE username = ?";
+        System.out.println("Ejecutando query: " + sql); // Debug
+
         try (Connection conn = ConexionBD.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, username);
             ResultSet rs = pstmt.executeQuery();
 
-            if (rs.next() && BCrypt.checkpw(password, rs.getString("password_hash"))) {
-                return mapearUsuario(rs);
+            if (rs.next()) {
+                System.out.println("Usuario encontrado: " + username); // Debug
+                String hashBD = rs.getString("password_hash");
+                System.out.println("Hash en BD: " + hashBD); // Debug
+
+                if (BCrypt.checkpw(password, hashBD)) {
+                    System.out.println("Contraseña válida"); // Debug
+                    return mapearUsuario(rs);
+                } else {
+                    System.out.println("Contraseña inválida"); // Debug
+                }
+            } else {
+                System.out.println("Usuario no encontrado"); // Debug
             }
             return null;
         }

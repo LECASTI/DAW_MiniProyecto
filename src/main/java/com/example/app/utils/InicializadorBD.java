@@ -6,20 +6,29 @@ import org.mindrot.jbcrypt.BCrypt;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.sql.*;
-import java.time.LocalDateTime;
 
 public class InicializadorBD implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         System.out.println("Inicializando base de datos...");
         try (Connection conn = ConexionBD.getConnection()) {
+            System.out.println("Conexión a BD establecida");
+
             if (!existeTabla(conn, "usuarios")) {
+                System.out.println("Creando tablas...");
                 ejecutarScriptInicial(conn);
+
+                System.out.println("Insertando datos de prueba...");
                 insertarDatosPrueba(conn);
+
                 System.out.println("Base de datos inicializada con datos de prueba");
+            } else {
+                System.out.println("Las tablas ya existen, omitiendo creación");
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error inicializando BD", e);
+            System.err.println("ERROR durante inicialización de BD:");
+            e.printStackTrace();
+            throw new RuntimeException("Error inicializando BD: " + e.getMessage(), e);
         }
     }
 

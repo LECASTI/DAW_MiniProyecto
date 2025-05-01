@@ -1,4 +1,3 @@
-// src/main/java/com/example/app/filters/AuthFilter.java
 package com.example.app.filters;
 
 import javax.servlet.*;
@@ -10,7 +9,12 @@ import java.util.Set;
 
 @WebFilter("/*")
 public class AuthFilter implements Filter {
-    private static final Set<String> ALLOWED_PATHS = Set.of("/login", "/registro", "/css/", "/js/");
+    private static final Set<String> ALLOWED_PATHS = Set.of("/login", "/registro", "/css/", "/js/", "/img/");
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        // Método de inicialización (puede dejarse vacío)
+    }
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
@@ -27,5 +31,10 @@ public class AuthFilter implements Filter {
         } else {
             response.sendRedirect(request.getContextPath() + "/login");
         }
+    }
+
+    @Override
+    public void destroy() {
+        // Método de destrucción (puede dejarse vacío)
     }
 }
