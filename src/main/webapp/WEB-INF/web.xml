@@ -28,6 +28,15 @@
     <url-pattern>/registro</url-pattern>
   </servlet-mapping>
 
+  <servlet>
+    <servlet-name>ChatServlet</servlet-name>
+    <servlet-class>com.example.app.servlets.ChatServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ChatServlet</servlet-name>
+    <url-pattern>/chat</url-pattern>
+  </servlet-mapping>
+
   <security-constraint>
     <web-resource-collection>
       <url-pattern>/admin/*</url-pattern>
