@@ -13,7 +13,6 @@ public class AuthFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        // Método de inicialización (puede dejarse vacío)
     }
 
     @Override
@@ -24,17 +23,20 @@ public class AuthFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) res;
         String path = request.getRequestURI().substring(request.getContextPath().length());
 
+        System.out.println("Filtro AuthFilter - URL: " + path); // Log
+
         boolean allowedPath = ALLOWED_PATHS.stream().anyMatch(path::startsWith);
 
         if (allowedPath || request.getSession().getAttribute("usuario") != null) {
+            System.out.println("Filtro AuthFilter - Sesión válida o ruta permitida"); // Log
             chain.doFilter(req, res);
         } else {
+            System.out.println("Filtro AuthFilter - Redirigiendo a login"); // Log
             response.sendRedirect(request.getContextPath() + "/login");
         }
     }
 
     @Override
     public void destroy() {
-        // Método de destrucción (puede dejarse vacío)
     }
 }

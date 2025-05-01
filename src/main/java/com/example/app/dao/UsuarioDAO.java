@@ -34,6 +34,18 @@ public class UsuarioDAO {
         }
     }
 
+    public void insertar(Usuario usuario) throws SQLException {
+        String sql = "INSERT INTO usuarios (username, password_hash, rol, creado_en) VALUES (?, ?, ?, ?)";
+        try (Connection conn = ConexionBD.getConnection(); // Obtener la conexión aquí
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, usuario.getUsername());
+            pstmt.setString(2, usuario.getPasswordHash());
+            pstmt.setString(3, usuario.getRol());
+            pstmt.setObject(4, usuario.getCreadoEn());
+            pstmt.executeUpdate();
+        } // La conexión y el PreparedStatement se cierran automáticamente aquí
+    }
+
     private Usuario mapearUsuario(ResultSet rs) throws SQLException {
         Usuario usuario = new Usuario();
         usuario.setUsuarioId(rs.getInt("usuario_id"));
@@ -42,4 +54,6 @@ public class UsuarioDAO {
         // ... otros campos
         return usuario;
     }
+
+
 }
