@@ -1,4 +1,3 @@
-// src/main/java/com/example/app/servlets/ChatServlet.java
 package com.example.app.servlets;
 
 import com.example.app.dao.ChatDAO;
@@ -15,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "ChatServlet", urlPatterns = {"/chat"})
@@ -24,19 +22,6 @@ public class ChatServlet extends HttpServlet {
     private ChatDAO chatDAO = new ChatDAO();
     private MensajeDAO mensajeDAO = new MensajeDAO();
 
-    public static class MensajeParaJSP {
-        private String contenido;
-        private String cssClass;
-
-        public MensajeParaJSP(String contenido, String cssClass) {
-            this.contenido = contenido;
-            this.cssClass = cssClass;
-        }
-
-        public String getContenido() { return contenido; }
-        public String getCssClass() { return cssClass; }
-    }
-
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -44,7 +29,7 @@ public class ChatServlet extends HttpServlet {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
 
         if (usuario == null) {
-            System.out.println("[WARNING] Usuario no autenticado, redirigiendo a login");
+            System.out.println("[ChatServlet] Usuario no autenticado, redirigiendo a login");
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
@@ -64,7 +49,7 @@ public class ChatServlet extends HttpServlet {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
 
         if (usuario == null) {
-            System.out.println("[WARNING] Usuario no autenticado, redirigiendo a login");
+            System.out.println("[ChatServlet] Usuario no autenticado, redirigiendo a login");
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
@@ -82,33 +67,18 @@ public class ChatServlet extends HttpServlet {
 
         Chat chat = chatDAO.obtenerChatPorUsuario(usuario.getUsuarioId());
         List<Mensaje> mensajes = null;
-        List<MensajeParaJSP> mensajesParaJSP = new ArrayList<>();
 
         if (chat == null) {
-            System.out.println("[INFO] No se encontró chat para el usuario, creando uno nuevo");
+            System.out.println("[ChatServlet] No se encontró chat para el usuario, creando uno nuevo");
             chat = crearChat(usuario);
         } else {
-            System.out.println("Chat existente ID: " + chat.getChatId());
+            System.out.println("[ChatServlet] Chat existente ID: " + chat.getChatId());
             mensajes = mensajeDAO.listarMensajesPorChat(chat.getChatId());
-            System.out.println("Mensajes encontrados en BD: " + mensajes.size());
+            System.out.println("[ChatServlet] Mensajes encontrados en BD: " + (mensajes != null ? mensajes.size() : 0));
         }
-
-        if (mensajes != null) {
-            for (Mensaje mensaje : mensajes) {
-                String cssClass = "admin-message";
-                if (mensaje.getUsuarioId() != null && mensaje.getUsuarioId().equals(usuario.getUsuarioId())) {
-                    cssClass = "user-message";
-                }
-
-                //  System.out.println("[DEBUG] Mensaje: " + mensaje.getContenido() + " | usuarioId: " + mensaje.getUsuarioId());
-                mensajesParaJSP.add(new MensajeParaJSP(mensaje.getContenido(), cssClass));
-            }
-        }
-
-        System.out.println("[DEBUG] mensajesParaJSP size: " + mensajesParaJSP.size());
 
         request.setAttribute("chat", chat);
-        request.setAttribute("mensajesParaJSP", mensajesParaJSP);
+        request.setAttribute("mensajes", mensajes);
         request.setAttribute("usuarioId", usuario.getUsuarioId());
         request.getRequestDispatcher("/WEB-INF/vistas/chat.jsp").forward(request, response);
     }

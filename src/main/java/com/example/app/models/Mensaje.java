@@ -10,6 +10,8 @@ public class Mensaje {
     private LocalDateTime enviadoEn;
     private boolean editado;
 
+    private transient String cssClass;
+
     // Constructor vacío
     public Mensaje() {}
 
@@ -72,4 +74,8 @@ public class Mensaje {
     public void setEditado(boolean editado) {
         this.editado = editado;
     }
+
+    public String getCssClass() { return cssClass; }
+
+    public void setCssClass(String cssClass) { this.cssClass = cssClass; }
 }

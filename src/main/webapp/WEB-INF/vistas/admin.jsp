@@ -52,17 +52,19 @@
                 </form>
             </td>
             <td>
-                <form action="${pageContext.request.contextPath}/admin/chat" method="get" style="display:inline;">
-                    <input type="hidden" name="usuarioId" value="<%= u.getUsuarioId() %>">
-                    <input type="submit" value="Ver chat">
-                </form>
+                <% if ("usuario".equals(u.getRol())) { %>
+                    <form action="${pageContext.request.contextPath}/admin/chat" method="get" style="display:inline;">
+                        <input type="hidden" name="usuarioId" value="<%= u.getUsuarioId() %>">
+                        <input type="submit" value="Ver chat">
+                    </form>
+                <% } %>
             </td>
         </tr>
     <% } %>
 </table>
 
 <br>
-<form action="${pageContext.request.contextPath}/logout" method="post">
+<form action="logout" method="post">
     <button type="submit">Cerrar sesión</button>
 </form>
 </body>
