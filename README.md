@@ -6,6 +6,8 @@ Aplicación web de chat con tres roles jerárquicos:
 - Admin (gestión usuarios + chat)
 - Superadmin (control total)
 
+Disponible en https://github.com/LECASTI/DAW_MiniProyecto
+
 ## Configuración postgres
 Se encuentra en el archivo src/dao/conexionBD
 
