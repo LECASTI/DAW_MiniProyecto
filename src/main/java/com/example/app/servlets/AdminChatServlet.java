@@ -31,16 +31,12 @@ public class AdminChatServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
         Usuario admin = (Usuario) session.getAttribute("usuario");
-
-        // Validar que sea admin
-        if (admin == null || !("admin".equals(admin.getRol()) && !"superadmin".equals(admin.getRol()))) {
-            response.sendRedirect(request.getContextPath() + "/login");
-            return;
-        }
+        System.out.println("[AdminChatServlet] "+ (admin != null ? admin.getRol() : "null"));
 
         String usuarioIdParam = request.getParameter("usuarioId");
         if (usuarioIdParam == null || usuarioIdParam.isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/admin");
+            System.out.println("[AdminChatServlet] usuario invalido");
             return;
         }
 
