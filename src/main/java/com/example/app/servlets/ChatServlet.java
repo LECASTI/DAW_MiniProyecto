@@ -1,7 +1,9 @@
+// src/main/java/com/example/app/servlets/ChatServlet.java
 package com.example.app.servlets;
 
 import com.example.app.dao.ChatDAO;
 import com.example.app.dao.MensajeDAO;
+import com.example.app.dao.UsuarioDAO;
 import com.example.app.models.Chat;
 import com.example.app.models.Mensaje;
 import com.example.app.models.Usuario;
@@ -13,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,6 +23,7 @@ import java.util.List;
 public class ChatServlet extends HttpServlet {
 
     private final ChatDAO chatDAO = new ChatDAO();
+    private final UsuarioDAO usuarioDAO = new UsuarioDAO();
     private final MensajeDAO mensajeDAO = new MensajeDAO();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -38,7 +42,11 @@ public class ChatServlet extends HttpServlet {
         if ("eliminarChat".equals(action)) {
             eliminarChat(request, response, usuario);
         } else {
-            mostrarChat(request, response, usuario);
+            try {
+                mostrarChat(request, response, usuario);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -56,14 +64,22 @@ public class ChatServlet extends HttpServlet {
 
         String contenido = request.getParameter("contenido");
         if (contenido != null && !contenido.trim().isEmpty()) {
-            enviarMensaje(request, response, usuario, contenido);
+            try {
+                enviarMensaje(request, response, usuario, contenido);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         } else {
-            mostrarChat(request, response, usuario);
+            try {
+                mostrarChat(request, response, usuario);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
     private void mostrarChat(HttpServletRequest request, HttpServletResponse response, Usuario usuario)
-            throws ServletException, IOException {
+            throws ServletException, IOException, SQLException {
 
         Chat chat = chatDAO.obtenerChatPorUsuario(usuario.getUsuarioId());
         List<Mensaje> mensajes = null;
@@ -74,12 +90,23 @@ public class ChatServlet extends HttpServlet {
         } else {
             System.out.println("[ChatServlet] Chat existente ID: " + chat.getChatId());
             mensajes = mensajeDAO.listarMensajesPorChat(chat.getChatId());
-            System.out.println("[ChatServlet] Mensajes encontrados en BD: " + (mensajes != null ? mensajes.size() : 0));
+            for (Mensaje m : mensajes) {
+                Usuario u = usuarioDAO.obtenerPorId(m.getUsuarioId());
+                if (u != null) {
+                    m.setUsuarioNombre(u.getUsername());
+                    m.setUsuarioRol(u.getRol());
+                } else {
+                    m.setUsuarioNombre("Sistema");
+                    m.setUsuarioRol("sistema");
+                }
+            }
+            System.out.println("[ChatServlet] Mensajes encontrados en BD: " + mensajes.size());
         }
 
         request.setAttribute("chat", chat);
         request.setAttribute("mensajes", mensajes);
         request.setAttribute("usuarioId", usuario.getUsuarioId());
+        request.setAttribute("currentUserId", usuario.getUsuarioId()); // ID del usuario actual
         request.getRequestDispatcher("/WEB-INF/vistas/chat.jsp").forward(request, response);
     }
 
@@ -95,7 +122,7 @@ public class ChatServlet extends HttpServlet {
     }
 
     private void enviarMensaje(HttpServletRequest request, HttpServletResponse response, Usuario usuario, String contenido)
-            throws ServletException, IOException {
+            throws ServletException, IOException, SQLException {
 
         Chat chat = chatDAO.obtenerChatPorUsuario(usuario.getUsuarioId());
         if (chat == null) {
@@ -114,7 +141,7 @@ public class ChatServlet extends HttpServlet {
     }
 
     private void eliminarChat(HttpServletRequest request, HttpServletResponse response, Usuario usuario)
-            throws ServletException, IOException {
+            throws IOException {
         Chat chat = chatDAO.obtenerChatPorUsuario(usuario.getUsuarioId());
         if (chat != null) {
             chatDAO.eliminar(chat.getChatId());

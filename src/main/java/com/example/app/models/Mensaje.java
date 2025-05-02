@@ -6,6 +6,8 @@ public class Mensaje {
     private int mensajeId;
     private int chatId;
     private Integer usuarioId;
+    private String usuarioNombre;
+    private String usuarioRol;
     private String contenido;
     private LocalDateTime enviadoEn;
     private boolean editado;
@@ -45,9 +47,17 @@ public class Mensaje {
         return usuarioId;
     }
 
+    public String getUsuarioNombre() { return usuarioNombre; }
+
+    public String getUsuarioRol() { return usuarioRol; }
+
     public void setUsuarioId(Integer usuarioId) {
         this.usuarioId = usuarioId;
     }
+
+    public void setUsuarioNombre(String usuarioNombre) { this.usuarioNombre = usuarioNombre; }
+
+    public void setUsuarioRol(String usuarioRol) { this.usuarioRol = usuarioRol; }
 
     public String getContenido() {
         return contenido;
@@ -72,4 +82,5 @@ public class Mensaje {
     public void setEditado(boolean editado) {
         this.editado = editado;
     }
+
 }

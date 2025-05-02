@@ -24,6 +24,10 @@ public class Usuario {
         this.ultimoLogin = ultimoLogin;
     }
 
+    public Usuario(int usuarioId) {
+        this.usuarioId = usuarioId;
+    }
+
     // Getters y Setters
     public int getUsuarioId() {
         return usuarioId;
@@ -49,9 +53,7 @@ public class Usuario {
         this.passwordHash = passwordHash;
     }
 
-    public String getRol() {
-        return rol;
-    }
+    public String getRol() { return rol; }
 
     public void setRol(String rol) {
         this.rol = rol;

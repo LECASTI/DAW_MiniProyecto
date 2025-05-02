@@ -1,5 +1,6 @@
 package com.example.app.filters;
 
+import com.example.app.models.Usuario;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.*;
@@ -28,20 +29,37 @@ public class AuthFilter implements Filter {
         String path = request.getRequestURI().substring(request.getContextPath().length());
 
         HttpSession session = request.getSession(false);
-        Object usuario = (session != null) ? session.getAttribute("usuario") : null;
+        Usuario usuario = (session != null) ? (Usuario) session.getAttribute("usuario") : null;
 
         System.out.println("[AuthFilter] URL: " + path);
         System.out.println("[AuthFilter] Usuario en sesión: " + (usuario != null ? usuario.toString() : "null"));
+        System.out.println("[AuthFilter] Rol del usuario: " + (usuario != null ? usuario.getRol() : "null"));
 
-
+        // 1. Verificar si es ruta pública
         boolean esRutaPublica = PUBLIC_PATHS.stream().anyMatch(path::startsWith);
+        if (esRutaPublica) {
+            chain.doFilter(req, res);
+            return;
+        }
 
-        if (esRutaPublica || usuario != null) {
-            chain.doFilter(req, res); // Permitir paso
-        } else {
+        // 2. Si no es ruta pública y no hay usuario, redirigir a login
+        if (usuario == null) {
             System.out.println("[AuthFilter] Acceso denegado. Redirigiendo a /login");
             response.sendRedirect(request.getContextPath() + "/login");
+            return;
         }
+
+        // 3. Verificar rutas administrativas
+        if (path.startsWith("/admin")) {
+            if (!"admin".equals(usuario.getRol()) && !"superadmin".equals(usuario.getRol())) {
+                System.out.println("[AuthFilter] Acceso denegado a ruta admin. Rol actual: " + usuario.getRol());
+                response.sendRedirect(request.getContextPath() + "/login");
+                return;
+            }
+        }
+
+        // 4. Permitir acceso en otros casos
+        chain.doFilter(req, res);
     }
 
     @Override
