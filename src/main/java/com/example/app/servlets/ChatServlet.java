@@ -19,8 +19,8 @@ import java.util.List;
 @WebServlet(name = "ChatServlet", urlPatterns = {"/chat"})
 public class ChatServlet extends HttpServlet {
 
-    private ChatDAO chatDAO = new ChatDAO();
-    private MensajeDAO mensajeDAO = new MensajeDAO();
+    private final ChatDAO chatDAO = new ChatDAO();
+    private final MensajeDAO mensajeDAO = new MensajeDAO();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

@@ -13,7 +13,7 @@ import java.util.List;
 @WebServlet(name = "AdminServlet", urlPatterns = {"/admin"})
 public class AdminServlet extends HttpServlet {
 
-    private UsuarioDAO usuarioDAO = new UsuarioDAO();
+    private final UsuarioDAO usuarioDAO = new UsuarioDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
