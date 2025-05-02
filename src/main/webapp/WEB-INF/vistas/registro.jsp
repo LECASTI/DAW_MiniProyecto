@@ -1,8 +1,10 @@
 <%-- src/main/webapp/WEB-INF/vistas/registro.jsp --%>
  <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page isELIgnored="false" %>
  <html>
  <head>
   <title>Registro</title>
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/registro.css">
  </head>
  <body>
   <h2>Registro de Usuario</h2>

@@ -1,8 +1,10 @@
 <%-- src/main/webapp/WEB-INF/vistas/login.jsp --%>
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page isELIgnored="false" %>
 <html>
 <head>
     <title>Login</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/login.css">
 </head>
 <body>
     <h2>Login</h2>

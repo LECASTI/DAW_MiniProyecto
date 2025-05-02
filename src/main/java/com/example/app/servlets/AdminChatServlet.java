@@ -58,11 +58,6 @@ public class AdminChatServlet extends HttpServlet {
         HttpSession session = request.getSession();
         Usuario admin = (Usuario) session.getAttribute("usuario");
 
-        // Validar que sea admin
-        if (admin == null || !("admin".equals(admin.getRol()) && !"superadmin".equals(admin.getRol()))) {
-            response.sendRedirect(request.getContextPath() + "/login");
-            return;
-        }
 
         String usuarioIdParam = request.getParameter("usuarioId");
         String contenido = request.getParameter("contenido");

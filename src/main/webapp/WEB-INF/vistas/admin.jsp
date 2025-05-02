@@ -13,7 +13,7 @@
 <html>
 <head>
     <title>Panel de Administración</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/chat.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin.css">
 </head>
 <body>
 <h1>Panel de Administración</h1>
