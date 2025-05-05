@@ -20,11 +20,10 @@ public class ConexionBD {
     }
 
     public static Connection getConnection() throws SQLException {
-        // Primero intenta conectar a la BD principal
         try {
             return DriverManager.getConnection(URL + DB_NAME, USER, PASS);
         } catch (SQLException e) {
-            if (e.getMessage().contains("No existe la base de datos")) {
+            if ("3D000".equals(e.getSQLState())) {
                 crearBaseDatos();
                 return DriverManager.getConnection(URL + DB_NAME, USER, PASS);
             }
@@ -32,13 +31,13 @@ public class ConexionBD {
         }
     }
 
+
     private static void crearBaseDatos() throws SQLException {
         try (Connection conn = DriverManager.getConnection(URL + "postgres", USER, PASS);
              Statement stmt = conn.createStatement()) {
 
             System.out.println("Creando base de datos...");
-            stmt.executeUpdate("CREATE DATABASE " + DB_NAME + " WITH OWNER = " + USER +
-                    " ENCODING 'UTF8' LC_COLLATE 'en_US.UTF-8' LC_CTYPE 'en_US.UTF-8'");
+            stmt.executeUpdate("CREATE DATABASE " + DB_NAME);
 
             System.out.println("Base de datos creada exitosamente");
         }

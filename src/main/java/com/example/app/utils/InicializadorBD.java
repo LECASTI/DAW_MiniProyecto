@@ -127,21 +127,31 @@ public class InicializadorBD implements ServletContextListener {
             }
 
             // Insertar mensajes de prueba
-            ResultSet rs = stmt.executeQuery("SELECT chat_id FROM chats");
+            ResultSet rs = stmt.executeQuery("SELECT chat_id, usuario_id FROM chats"); {
+
             while (rs.next()) {
                 int chatId = rs.getInt("chat_id");
-                // Mensaje del usuario
-                stmt.executeUpdate(
-                        "INSERT INTO mensajes (chat_id, usuario_id, contenido) VALUES " +
-                                "(" + chatId + ", " + ((chatId % 4) + 1) + ", 'Hola, tengo un problema con mi cuenta')"
-                );
+                int userId = rs.getInt("usuario_id");
 
-                // Respuesta del admin
-                stmt.executeUpdate(
-                        "INSERT INTO mensajes (chat_id, usuario_id, contenido) VALUES " +
-                                "(" + chatId + ", 2, 'Hola, ¿en qué podemos ayudarte?')"
-                );
+                // Crear un statement nuevo para cada insert
+                try (PreparedStatement pstmt1 = conn.prepareStatement(
+                        "INSERT INTO mensajes (chat_id, usuario_id, contenido) VALUES (?, ?, ?)")) {
+                    pstmt1.setInt(1, chatId);
+                    pstmt1.setInt(2, userId); // mensaje del usuario
+                    pstmt1.setString(3, "Hola, tengo un problema con mi cuenta");
+                    pstmt1.executeUpdate();
+                }
+
+                try (PreparedStatement pstmt2 = conn.prepareStatement(
+                        "INSERT INTO mensajes (chat_id, usuario_id, contenido) VALUES (?, ?, ?)")) {
+                    pstmt2.setInt(1, chatId);
+                    pstmt2.setInt(2, 2); // respuesta del admin (usuario_id = 2)
+                    pstmt2.setString(3, "Hola, ¿en qué podemos ayudarte?");
+                    pstmt2.executeUpdate();
+                }
+                }
             }
+
         }
     }
 
